@@ -21,7 +21,7 @@ export default {
   },
    methods: {
     greet: function () {
-      this.axios.get('/').then((res) => {
+      this.axios.get('/getvideoinput').then((res) => {
       this.message = res.data
       // this.rows = res.data
       // alert(res.data)

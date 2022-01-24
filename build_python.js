@@ -21,5 +21,5 @@ proc.stderr.on("data", (data) => {
 });
 
 proc.on("exit", (code) => {
-    process.stdout.write("PyInstaller exited with code " + code.toString());
+    process.stdout.write("cxfreeze exited with code " + code.toString());
 });
