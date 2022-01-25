@@ -12,18 +12,21 @@ cors = CORS(app)
 graph = FilterGraph()
 @app.route("/")
 def hello():
+   
     return 'test'
 
 @app.route("/getvideoinput")
 def get_video_devices():
 
-    
     input_video_devices_list = graph.get_input_devices()
 
     print(input_video_devices_list)
-    dic = {}
-    for i, device in enumerate(input_video_devices_list):
-        dic[device] = i
+    dic = {'devices':[]}
+    for i, device_name in enumerate(input_video_devices_list):
+        device_dic = {}
+        device_dic['id'] = i
+        device_dic['name'] = device_name
+        dic['devices'].append(device_dic)
 
     return dic
 
