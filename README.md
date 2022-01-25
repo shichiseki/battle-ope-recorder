@@ -1,4 +1,8 @@
 # battle_ope_recorder
+electronアプリ
+## 行ったこと
+    接続されているビデオデバイスの名前とIDをPython(flask)上で取得
+    デバイス名をセレクトできるようにした
 
 ## Project setup
 ```
