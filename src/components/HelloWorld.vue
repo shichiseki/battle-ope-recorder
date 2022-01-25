@@ -2,7 +2,18 @@
   <div class="hello">
       <button v-on:click="greet">test</button>
   <p>The button above has been clicked {{ counter }} times.</p>
-  {{ message }}
+  {{ video_device_list.devices }}
+  <li v-for="item in video_device_list.devices" :key="item">
+    {{ item.id }}
+  </li>
+<div id="v-model-select-dynamic" class="demo">
+  <select v-model="selected">
+    <option v-for="item in video_device_list.devices" :key="item" :value="item.id">
+      {{ item.name }}
+    </option>
+  </select>
+  <span>Selected: {{ selected }}</span>
+</div>
   </div>
 </template>
 
@@ -15,18 +26,15 @@ export default {
   data() {
     return {
       counter: 0,
-      message: ''
+      selected: '',
+      video_device_list: {}
     }
 
   },
-   methods: {
-    greet: function () {
+   created: function () {
       this.axios.get('/getvideoinput').then((res) => {
-      this.message = res.data
-      // this.rows = res.data
-      // alert(res.data)
+      this.video_device_list = res.data
       })
-    }
     }
 
 }
