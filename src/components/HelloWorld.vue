@@ -31,6 +31,15 @@ export default {
     }
 
   },
+  methods:{
+    greet(){
+      this.axios.post('/video', {
+        video_id: this.selected
+      })
+      .then()
+    }
+
+  },
    created: function () {
       this.axios.get('/getvideoinput').then((res) => {
       this.video_device_list = res.data
