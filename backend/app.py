@@ -31,6 +31,12 @@ def get_video_devices():
     return dic
 
 
+@app.route("/video", methods=["POST"])
+def video_frame():
+    print(request.get_json()['video_id'])
+    return 'test'
+
+
 if __name__ == "__main__":
     print('on hello')
     app.run(port=5000)
