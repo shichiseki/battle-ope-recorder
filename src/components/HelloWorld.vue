@@ -12,7 +12,15 @@
       {{ item.name }}
     </option>
   </select>
-  <span>Selected: {{ selected }}</span>
+  <!-- <span>Selected: {{ selected }}</span> -->
+  <!-- <img :src="imgSrc" fit="fill"> -->
+
+<div v-if="show">
+  <!-- <img :src="'/video/' + selected" fit="fill"> -->
+  <img :src="camid" fit="fill" width="720">
+  {{ '/video/' + camid }}
+</div>
+<!-- </div> -->
 </div>
   </div>
 </template>
@@ -27,23 +35,70 @@ export default {
     return {
       counter: 0,
       selected: '',
-      video_device_list: {}
+      video_device_list: {},
+      imgSrc:'',
+      show:false,
+      camid:''
     }
 
   },
   methods:{
     greet(){
-      this.axios.post('/video', {
-        video_id: this.selected
-      })
-      .then()
-    }
-
-  },
+      // this.axios.get('/video/' + this.selected).then((res) =>{
+      //   this.imgSrc = res.data
+      // })
+      this.show = true
+      // this.axios.post('/post_video_id', {
+      //   video_id: this.selected
+      // })
+      // this.show = false
+      // this.axios.get('/video/' + this.selected).then((res) => {
+      //   console.log(res.status)
+      //   if (res.status === 200){
+      //     this.show = true
+      //   }
+        
+      // })
+      }
+      
+    },
    created: function () {
       this.axios.get('/getvideoinput').then((res) => {
       this.video_device_list = res.data
       })
+    },
+    watch: {
+      selected: function() {
+          this.camid = "/video/" + this.selected
+          this.axios.post('/post_video_id', {
+        video_id: this.selected
+      }).then(()=>{
+        
+      })
+
+      this.axios.get(this.camid).then(() => {
+        this.show = true
+      })
+            // this.show = false
+      this.camid = ''
+      
+      setTimeout(()=>{
+          this.camid = "/video/" + this.selected
+      }, 500)
+
+        // this.show = true
+      //   this.axios.get('/video/' + this.selected).then((res) =>{
+      //   this.imgSrc = res.data
+      // })
+      //   this.show = false
+      // this.axios.get('/video/' + this.selected).then((res) => {
+      //   console.log(res.status)
+      //   if (res.data !== -1){
+      //     this.show = true
+      //   }
+        
+      // })
+      }
     }
 
 }
