@@ -3,8 +3,8 @@ module.exports = {
 
         // localhostでvueからexpressにAPIリクエストを送信する為の設定
         proxy:{
-            '/': {
-                target:'http://localhost:5000',
+            '/*': {
+                target:'http://localhost:5000/',
                 changeOrigin: true,
             },
         },
