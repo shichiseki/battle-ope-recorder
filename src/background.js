@@ -61,9 +61,9 @@ app.on('ready', async () => {
     // const spawn = childProcess.spawn(path.join(__dirname, ''))
     console.log('packaged')
   }else {
-    console.log(path.join(__dirname, '../backend/app.py'))
-    const spawn = childProcess.spawn('python', [path.join(__dirname, '../backend/app.py')])
-    // console.log(spawn)
+    // console.log(path.join(__dirname, '../backend/app.py'))
+    // const spawn = childProcess.spawn('python', [path.join(__dirname, '../backend/app.py')])
+    // // console.log(spawn)
     console.log('nonpackaged')
   }
 
