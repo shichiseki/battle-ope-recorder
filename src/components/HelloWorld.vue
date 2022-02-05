@@ -1,28 +1,31 @@
 <template>
-  <div class="hello">
-      <button v-on:click="greet">test</button>
-  <p>The button above has been clicked {{ counter }} times.</p>
-  {{ video_device_list.devices }}
-  <li v-for="item in video_device_list.devices" :key="item">
-    {{ item.id }}
-  </li>
-<div id="v-model-select-dynamic" class="demo">
+<div class="flex">
+  <img :src="'http://localhost:5000/video/' + selected">
+  <!-- <div v-if="show" align="left"> -->
+    <!-- <div v-if="camid !== ''" align="left"> -->
+      <!-- <img src="http://localhost:5000/video/0/"> -->
+      <!-- <img :src="camid"> -->
+      <!-- <img src="localhost:5000/video/{{ selected }}/"> -->
+    <!-- </div> -->
+    <!-- <div v-else align="left">
+    <img alt="Vue logo" src="../assets/loadimage.png" width="720">
+  </div> -->
+  <!-- </div> -->
+  <!-- <div v-else align="left">
+    <img alt="Vue logo" src="../assets/loadimage.png" width="720">
+  </div> -->
+  <!-- <img src="http://localhost:5000/video/0/"> -->
+  {{ video_device_list }}
+  {{ selected }}
+  <div>
+  <button v-on:click="greet">画面表示</button>
   <select v-model="selected">
     <option v-for="item in video_device_list.devices" :key="item" :value="item.id">
       {{ item.name }}
     </option>
   </select>
-  <!-- <span>Selected: {{ selected }}</span> -->
-  <!-- <img :src="imgSrc" fit="fill"> -->
-
-<div v-if="show">
-  <!-- <img :src="'/video/' + selected" fit="fill"> -->
-  <img :src="camid" fit="fill" width="720">
-  {{ '/video/' + camid }}
-</div>
-<!-- </div> -->
-</div>
   </div>
+</div>
 </template>
 
 <script>
@@ -70,21 +73,21 @@ export default {
     watch: {
       selected: function() {
           this.camid = "/video/" + this.selected
-          this.axios.post('/post_video_id', {
-        video_id: this.selected
-      }).then(()=>{
+      //     this.axios.post('/post_video_id', {
+      //   video_id: this.selected
+      // }).then(()=>{
         
-      })
+      // })
 
-      this.axios.get(this.camid).then(() => {
-        this.show = true
-      })
+      // this.axios.get(this.camid).then(() => {
+      //   this.show = true
+      // })
             // this.show = false
-      this.camid = ''
+      // this.camid = ''
       
-      setTimeout(()=>{
-          this.camid = "/video/" + this.selected
-      }, 500)
+      // setTimeout(()=>{
+      //     this.camid = "/video/" + this.selected
+      // }, 500)
 
         // this.show = true
       //   this.axios.get('/video/' + this.selected).then((res) =>{
@@ -119,5 +122,27 @@ li {
 }
 a {
   color: #42b983;
+}
+.flex{
+    /*コレ追加*/
+    display: flex;
+    border: 1px solid #333;
+    
+}
+.flex div{
+    border: 1px solid #333;
+    background: #CCC;
+}
+.right{
+    /*コレ追加*/
+    width: 200px;
+}
+.left{
+
+    /*コレ追加*/
+    width: calc(100% - 200px);
+}
+.button{
+display:inline-block;/*コレ*/
 }
 </style>
