@@ -27,3 +27,9 @@ pnpm-debug.log*
 /dist_electron
 
 test.py
+
+#image
+\number_template_img_*
+\template_image_bin
+\input_image
+\test_result_img
