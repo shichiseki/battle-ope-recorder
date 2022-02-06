@@ -1,34 +1,6 @@
 <template>
-  <!-- <div class="camera">
-    <div class="wrapper">
-      <button @click="this.$parent.showCamera = false" class="button-close">x</button>
-       <button class="button-snap" @click="toggleCamera()">
-        <span v-if="!isCameraOpen">Open Camera</span>
-        <span v-else>Close Camera</span>
-      </button>
-       <div class="video-container">
-        <video v-show="isCameraOpen" class="camera-video" ref="camera" :width="450" :height="337" autoplay playsinline ></video>
-        <canvas id="photoTaken" v-show="isPhotoTaken" class="canvas-photo" ref="canvas" :width="450" :height="337"></canvas>
-      </div>
-       <button v-if="!isPhotoTaken && isCameraOpen" class="button-snap" @click="takePhoto">
-        <span>Snap!</span>
-      </button>
-      <button v-show="isPhotoTaken && isCameraOpen" class="camera-download">
-        <a id="downloadPhoto" download="VueRocksPhoto.jpg" class="button" role="button" @click="downloadImage">
-          Download
-        </a>
-      </button>
-      <select v-model="selected">
-    <option v-for="item in devices" :key="item.DeviceName" :value="item.DeviceId">
-      {{ item.DeviceName }}
-    </option>
-  </select>
-    </div>
-    {{ selected }}
-  </div> -->
   <div>
-    <!-- <button class="button-snap" @click="toggleShow()"> -->
-    <button class="button-snap" v-on:click="isCameraOpen ^= true">
+    <button class="button-snap" v-on:click="toggleShow">
         <span v-if="!isCameraOpen">映像表示</span>
         <span v-else>映像停止</span>
       </button>
@@ -37,9 +9,15 @@
       {{ item.DeviceName }}
     </option>
   </select>
-  <video v-show="isCameraOpen" class="camera-video" ref="camera" :width="450" :height="337" autoplay playsinline ></video>
-  {{ selected }}
+  <!-- {{ selected }} -->
+  <video v-show="isCameraOpen" id="video-device" class="camera-video" ref="camera" :width="640" :height="360" autoplay playsinline ></video>
+  <canvas ref="canvas" id="canvasforimg"></canvas>
+  <img id="imageprocessed"/>
+  <h1>
+    {{ judge }}
+  </h1>
   </div>
+  
 </template>
 
 <script>
@@ -50,7 +28,12 @@ export default {
       isCameraOpen: false,
       isPhotoTaken: false,
       devices: [],
-      selected:''
+      selected:'',
+      captureTimer: '',
+      width: 1920,
+      height: 1080,
+      interval: 500,
+      judge: ''
     }
   },
   methods: {
@@ -62,7 +45,9 @@ export default {
       const constraints = (window.constraints = {
         audio: false,
         video: {
-          deviceId:this.selected
+          deviceId:this.selected,
+          width: this.width,
+          height: this.height
         }
       })
       navigator.mediaDevices
@@ -82,26 +67,52 @@ export default {
       })
       console.log('CameraClosed')
     },
+
     toggleShow () {
       this.isCameraOpen ^= true
+      console.log('toggle')
+      if (this.isCameraOpen) {
+        this.startCapture()
+      }else{
+        this.stopCapture()
+      }
     },
-    takePhoto () {
-      this.isPhotoTaken = !this.isPhotoTaken
 
-      const context = this.$refs.canvas.getContext('2d')
-      const photoFromVideo = this.$refs.camera
-
-      context.drawImage(photoFromVideo, 0, 0, 450, 337)
+    startCapture () {
+      this.createCameraElement()
+      this.captureTimer = setInterval(() => {
+        this.capture()
+      }, this.interval)
     },
-    downloadImage() {
-    const download = document.getElementById("downloadPhoto");
-    const canvas = document.getElementById("photoTaken").toDataURL("image/jpeg")
-      .replace("image/jpeg", "image/octet-stream");
-    download.setAttribute("href", canvas);
-    }
+    stopCapture (){
+      this.stopCameraStream()
+      clearInterval(this.captureTimer)
+    },
+
+    capture () {
+      const canvas = document.getElementById('canvasforimg');
+      const ctx = canvas.getContext('2d'); //canvasの描画モードを2Dに指定
+      const videoElm = document.getElementById('video-device'); //相手側の映像要素
+      const w = this.width
+      const h = this.height
+      canvas.setAttribute("width", w);
+      canvas.setAttribute("height", h);
+      ctx.drawImage(videoElm, 0, 0)
+      const img_base64 = canvas.toDataURL('image/png');
+      const fd = new FormData()
+      fd.append("image", img_base64)
+      this.axios.post('/img', fd).then(res => {
+        // const processedimg = document.getElementById('imageprocessed')
+        // processedimg.setAttribute("width", 640);
+        // processedimg.setAttribute("height", 360);
+        // processedimg.src = res.data
+        console.log(res.data)
+        this.judge = res.data
+      })
+        }
   },
   created: function(){
-          let self = this
+        let self = this
         navigator.mediaDevices
         .enumerateDevices()
         .then(devices => {
@@ -115,22 +126,13 @@ export default {
         .catch(error => {
           alert(error, "May the browser didn't support or there is some errors.")
         })
-
-      const constraints = {
-        audio: false,
-        video: {
-          deviceId:this.selected
-        }
-      }
-      navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then(stream => {
-          this.$refs.camera.srcObject = stream
-        })
-        .catch(error => {
-          alert(error, "May the browser didn't support or there is some errors.")
-        })
-    
+        this.createCameraElement()
   },  
 }
 </script>
+
+<style>
+#canvasforimg {
+ display: none !important;
+}
+</style>
