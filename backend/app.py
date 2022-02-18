@@ -28,10 +28,8 @@ def img():
     imgPIL = Image.open(BytesIO(code))
     imgCV = np.asarray(imgPIL)
 
-    # imgCV = cv2.cvtColor(imgCV, cv2.COLOR_RGB2GRAY)
     img_process.image_process(imgCV)
-    print(f'{img_process.leftscore} vs {img_process.rightscore}')
-
+    
     return f'{img_process.leftscore} vs {img_process.rightscore}'
 
 if __name__ == "__main__":

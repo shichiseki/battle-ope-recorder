@@ -5,7 +5,6 @@ from PIL import Image
 # import pyocr
 import pytesseract
 
-import io
 import re
 import os
 
@@ -31,9 +30,8 @@ class image_process:
     def image_process(self, img):
         self.input_img = cv2.resize(img, (1920, 1080))
         self.result_img = self.input_img.copy()
-        self.judge_battle()
-        # self.player_recog()
-
+        # self.judge_battle()
+        self.player_recog()
 
     def judge_battle(self):
         img = cv2.cvtColor(self.input_img, cv2.COLOR_RGB2GRAY)
