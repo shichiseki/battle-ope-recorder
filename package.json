@@ -11,8 +11,8 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "electorn-python:build":"yarn run build-python && vue-cli-service electron:build",
-    "electorn-python:serve":"yarn run build-python && vue-cli-service electron:serve"
+    "electorn-python:build": "yarn run build-python && vue-cli-service electron:build",
+    "electorn-python:serve": "yarn run build-python && vue-cli-service electron:serve"
   },
   "main": "background.js",
   "dependencies": {
@@ -21,6 +21,7 @@
     "core-js": "^3.6.5",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
+    "tesseract.js": "^2.1.5",
     "vue": "^3.0.0"
   },
   "devDependencies": {
