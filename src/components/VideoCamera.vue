@@ -13,14 +13,16 @@
   <video v-show="isCameraOpen" id="video-device" class="camera-video" ref="camera" :width="640" :height="360" autoplay playsinline ></video>
   <canvas ref="canvas" id="canvasforimg"></canvas>
   <img id="imageprocessed"/>
+  <button v-on:click="tryOcr"></button>
   <h1>
-    {{ judge }}
   </h1>
   </div>
   
 </template>
 
 <script>
+import Tesseract from 'tesseract.js';
+import debugimg from '../assets/ocr_test_img.png';
 export default {
   name: 'Camera',
   data() {
@@ -88,6 +90,17 @@ export default {
       this.stopCameraStream()
       clearInterval(this.captureTimer)
     },
+  tryOcr (){
+    // const canvas = document.getElementById('canvasforimg');
+    // const src = canvas.toDataURL('image/png');
+Tesseract.recognize(
+  debugimg,
+  'jpn+eng',
+  { logger: m => console.log(m) }
+).then(({ data: { text } }) => {
+  console.log(text);
+})
+  },
 
     capture () {
       const canvas = document.getElementById('canvasforimg');
@@ -99,6 +112,7 @@ export default {
       canvas.setAttribute("height", h);
       ctx.drawImage(videoElm, 0, 0)
       const img_base64 = canvas.toDataURL('image/png');
+      // this.tryOcr()
       const fd = new FormData()
       fd.append("image", img_base64)
       this.axios.post('/img', fd).then(res => {
@@ -109,8 +123,11 @@ export default {
         console.log(res.data)
         this.judge = res.data
       })
-        }
+        },
+    
+
   },
+
   created: function(){
         let self = this
         navigator.mediaDevices
