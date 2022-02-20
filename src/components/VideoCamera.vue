@@ -22,7 +22,7 @@
 
 <script>
 import Tesseract from 'tesseract.js';
-import debugimg from '../assets/ocr_test_img.png';
+import debugimg from '../assets/bin.png';
 export default {
   name: 'Camera',
   data() {
@@ -34,7 +34,7 @@ export default {
       captureTimer: '',
       width: 1920,
       height: 1080,
-      interval: 500,
+      interval: 66,
       judge: ''
     }
   },
@@ -116,12 +116,12 @@ Tesseract.recognize(
       const fd = new FormData()
       fd.append("image", img_base64)
       this.axios.post('/img', fd).then(res => {
-        // const processedimg = document.getElementById('imageprocessed')
-        // processedimg.setAttribute("width", 640);
-        // processedimg.setAttribute("height", 360);
-        // processedimg.src = res.data
-        console.log(res.data)
-        this.judge = res.data
+        const processedimg = document.getElementById('imageprocessed')
+        processedimg.setAttribute("width", 640);
+        processedimg.setAttribute("height", 360);
+        processedimg.src = res.data
+        // console.log(res.data)
+        // this.judge = res.data
       })
         },
     
