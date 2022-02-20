@@ -28,9 +28,19 @@ def img():
     imgPIL = Image.open(BytesIO(code))
     imgCV = np.asarray(imgPIL)
 
-    img_process.image_process(imgCV)
+    # img_process.image_process(imgCV)
+    imgCV = cv2.resize(imgCV, (640, 360))
+    imgCV = cv2.cvtColor(imgCV, cv2.COLOR_BGR2GRAY)
+    ret, bin = cv2.threshold(imgCV, 0, 255, cv2.THRESH_OTSU)
+    imgCV = cv2.bitwise_not(bin)
     
-    return f'{img_process.leftscore} vs {img_process.rightscore}'
+
+    ret, png_data = cv2.imencode(".png", imgCV)
+    # img_bytes = BytesIO(imgCV)
+    imgCV_base64 = base64.b64encode(png_data).decode()
+
+    return f"data:image/jpeg;base64,{imgCV_base64}"
+    # return f'{img_process.leftscore} vs {img_process.rightscore}'
 
 if __name__ == "__main__":
     print('on hello')
